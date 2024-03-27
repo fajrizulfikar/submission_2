@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs-ui-deployment
+  labels:
+    app: karsajobs-ui
+spec:
+  selector:
+    matchLabels:
+      app: karsajobs-ui
+  template:
+    metadata:
+      labels:
+        app: karsajobs-ui
+    spec:
+      containers:
+        - name: karsajobs-ui-container
+          image: ghcr.io/fajrizulfikar/a433-microservices/karsajobs-ui:latest
+          ports:
+            - containerPort: 8000
+  replicas: 1
