@@ -20,16 +20,16 @@ spec:
             - containerPort: 27017
           env:
             - name: MONGO_INITDB_ROOT_USERNAME_FILE
-              value: /etc/mongo-cred/MONGO_ROOT_USERNAME
+              value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
             - name: MONGO_INITDB_ROOT_PASSWORD_FILE
-              value: /etc/mongo-cred/MONGO_ROOT_PASSWORD
+              value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
           volumeMounts:
             - name: mongo-persistent-storage
               mountPath: /data/db
             - name: mongo-config
               mountPath: /config
             - name: mongo-secret
-              mountPath: /etc/mongo-cred
+              mountPath: /etc/mongo-credentials
       volumes:
         - name: mongo-persistent-storage
           persistentVolumeClaim:
