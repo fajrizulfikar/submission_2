@@ -1,11 +1,17 @@
+# use api version 1 from kubernetes
 apiVersion: v1
+# use Service for communicating with the other resource
 kind: Service
+# specify metadata for Service
 metadata:
   name: karsajobs-svc
+# specify requirement of the resource
 spec:
   type: NodePort
   ports:
     - port: 8080
+      # set custom nodePort
       nodePort: 32000
+  # selector will try to find and discover `karsajobs` instance
   selector:
     app: karsajobs

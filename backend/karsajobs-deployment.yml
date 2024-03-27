@@ -1,23 +1,35 @@
+# use api version 1 from group `apps` in kubernetes
 apiVersion: apps/v1
+# Deployment object allow us to set desired state of our pods
 kind: Deployment
+# specify metadata for Deployment
 metadata:
   name: karsajobs-deployment
   labels:
     app: karsajobs
+# specify requirement of the resource
 spec:
+  # to select which Pods the Deployment manages
   selector:
+    # Pods managed by this Deployment must have a label `app` with the value `karsajobs`
     matchLabels:
       app: karsajobs
+  # specify the Pod template that'll be used to create new Pods
   template:
+    # specify metadata for Pod template
     metadata:
       labels:
         app: karsajobs
+    # specify Pod requirements/specification
     spec:
+      # for summon container inside Pod
       containers:
         - name: karsajobs-container
+          # pull image from github packages
           image: ghcr.io/fajrizulfikar/a433-microservices/karsajobs:latest
           ports:
             - containerPort: 8080
+          # specify environment variable for container
           env:
             - name: APP_PORT
               value: "8080"
@@ -32,5 +44,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_ROOT_PASSWORD 
+                  key: MONGO_ROOT_PASSWORD
+  # use only 1 replica
   replicas: 1

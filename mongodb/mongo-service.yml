@@ -1,10 +1,17 @@
+# use api version 1 from kubernetes
 apiVersion: v1
+# use Service for communicating with the other resource
 kind: Service
+# specify metadata for Service
 metadata:
   name: mongo-svc
+# specify requirement of the resource
 spec:
   ports:
+    # use 27017 as static port
     - port: 27017
+  # selector will try to find and discover `mongodb` instance
   selector:
     app: mongodb
+  # use `None` to mark this as headless service
   clusterIP: None

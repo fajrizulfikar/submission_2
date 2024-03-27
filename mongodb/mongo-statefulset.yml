@@ -1,47 +1,72 @@
+# use api version 1 from group `apps` in kubernetes
 apiVersion: apps/v1
+# since we want to use PersistentVolume from our db, we need the help of StatefulSet
 kind: StatefulSet
+# specify metadata for StatefulSet
 metadata:
   name: mongo-stateful
   labels:
     app: mongodb
+# specify requirement of the resource
 spec:
+  # to select which Pods the Deployment manages
   selector:
     matchLabels:
+      # Pods managed by this Deployment must have a label `app` with the value `mongodb`
       app: mongodb
+  # specify the Pod template that'll be used to create new Pods
   template:
+    # specify metadata for Pod template
     metadata:
       labels:
         app: mongodb
+    # specify Pod requirements/specification
     spec:
+      # for summon container inside Pod
       containers:
         - name: mongodb-container
+          # pull image from docker registry
           image: mongo:latest
           ports:
+            # specify container port
             - containerPort: 27017
+          # specify environment variable for container
           env:
             - name: MONGO_INITDB_ROOT_USERNAME_FILE
+              # get username from volume
               value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
             - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              # get password from volume
               value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
           volumeMounts:
+            # mount pvc to desired path
             - name: mongo-persistent-storage
               mountPath: /data/db
+            # mount config to desired path
             - name: mongo-config
               mountPath: /config
+            # mount secret to desired path
             - name: mongo-secret
               mountPath: /etc/mongo-credentials
+      # specify volume available to the pod
       volumes:
+        # mongo-persistent-storage volume will refer to mongo-pvc
         - name: mongo-persistent-storage
           persistentVolumeClaim:
             claimName: mongo-pvc
+        # mongo-config volume will refer to mongo-config
         - name: mongo-config
           configMap:
             name: mongo-config
+            # specify list of items to be included from the ConfigMap
             items:
               - key: mongo.conf
                 path: mongo.conf
+        # mongo-secret volume will refer to mongo-secret
         - name: mongo-secret
           secret:
             secretName: mongo-secret
+  # specify service name
   serviceName: mongo-svc
+  # only summon 1 replica
   replicas: 1

@@ -1,22 +1,36 @@
+# use api version 1 from kubernetes
 apiVersion: v1
+# for storing data to mongodb we need to use PersistentVolume
 kind: PersistentVolume
+# specify metadata for PersistentVolume
 metadata:
   name: mongo-pv
+# specify requirement of the resource
 spec:
   capacity:
+    # request 1 gigabyte capacity
     storage: 1Gi
   accessModes:
+    # set as read-write
     - ReadWriteOnce
   hostPath:
+    # we will use this path for our volume
     path: "/mnt/mongo_data"
 ---
+# use api version 1 from kubernetes
 apiVersion: v1
+# we use PersistentVolumeClaim to claim our PersistentVolume above
 kind: PersistentVolumeClaim
+# specify metadata for PersistentVolumeClaim
 metadata:
   name: mongo-pvc
+# specify desired state of the resource
 spec:
   accessModes:
+    # set as read-write
     - ReadWriteOnce
+# specify requirement of the resource
   resources:
     requests:
+      # request 1 gigabyte capacity
       storage: 1Gi

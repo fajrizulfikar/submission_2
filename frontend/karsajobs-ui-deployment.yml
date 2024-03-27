@@ -1,21 +1,32 @@
+# use api version 1 from group `apps` in kubernetes
 apiVersion: apps/v1
+# Deployment object allow us to set desired state of our pods
 kind: Deployment
+# specify metadata for Deployment
 metadata:
   name: karsajobs-ui-deployment
   labels:
     app: karsajobs-ui
+# specify requirement of the resource
 spec:
+  # to select which Pods the Deployment manages
   selector:
+    # Pods managed by this Deployment must have a label `app` with the value `karsajobs-ui`
     matchLabels:
       app: karsajobs-ui
+  # specify the Pod template that'll be used to create new Pods
   template:
+    # specify metadata for Pod template
     metadata:
       labels:
         app: karsajobs-ui
     spec:
+      # for summon container inside Pod
       containers:
         - name: karsajobs-ui-container
+          # pull image from github packages
           image: ghcr.io/fajrizulfikar/a433-microservices/karsajobs-ui:latest
           ports:
             - containerPort: 8000
+  # only use one replica
   replicas: 1

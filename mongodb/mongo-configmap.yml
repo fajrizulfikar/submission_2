@@ -1,7 +1,11 @@
+# use api version 1 from kubernetes
 apiVersion: v1
+# use ConfigMap type for storing our config
 kind: ConfigMap
+# specify metadata for ConfigMap
 metadata:
   name: mongo-config
+# specify actual data to be stored in ConfigMap
 data:
   mongo.conf: |
     storage:
