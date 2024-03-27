@@ -8,8 +8,6 @@ spec:
   selector:
     matchLabels:
       app: mongodb
-  serviceName: mongo-svc
-  replicas: 1
   template:
     metadata:
       labels:
@@ -36,12 +34,14 @@ spec:
         - name: mongo-persistent-storage
           persistentVolumeClaim:
             claimName: mongo-pvc
-        - name: config
+        - name: mongo-config
           configMap:
             name: mongo-config
             items:
-              - key: config
+              - key: mongo.conf
                 path: mongo.conf
-        - name: secret
+        - name: mongo-secret
           secret:
             secretName: mongo-secret
+  serviceName: mongo-svc
+  replicas: 1
