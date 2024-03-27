@@ -2,22 +2,46 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongo-stateful
+  labels:
+    app: mongodb
 spec:
-  serviceName: mongo-svc
-  replicas: 1
   selector:
     matchLabels:
       app: mongodb
-    template:
-      metadata:
-        labels:
-          app: mongodb
-      spec:
-        containers:
-          - name: mongodb-container
-            image: mongo:latest
-            ports:
-              - containerPort: 27017
-            volumeMounts:
-              - name: mongo-storage
-                mountPath: /data/db
+  serviceName: mongo-svc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb-container
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: /etc/mongo-cred/MONGO_USER
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: /etc/mongo-cred/MONGO_PASS
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+            - name: mongo-config
+              mountPath: /config
+            - name: mongo-secret
+              mountPath: /etc/mongo-cred
+      volumes:
+        - name: mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+        - name: config
+          configMap:
+            name: mongo-config
+            items:
+              - key: config
+                path: mongo.conf
+        - name: secret
+          secret:
+            secretName: mongo-secret
