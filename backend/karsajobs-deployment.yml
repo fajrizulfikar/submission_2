@@ -27,10 +27,10 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_USER
+                  key: MONGO_ROOT_USERNAME
             - name: MONGO_PASS
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: MONGO_PASS 
+                  key: MONGO_ROOT_PASSWORD 
   replicas: 1
