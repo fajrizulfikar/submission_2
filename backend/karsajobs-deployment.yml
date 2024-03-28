@@ -34,6 +34,7 @@ spec:
             - name: APP_PORT
               value: "8080"
             - name: MONGO_HOST
+              # I paste the value from mongo-statefulset to here
               value: mongodb
             - name: MONGO_USER
               valueFrom:
